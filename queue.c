@@ -1,78 +1,55 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Node {
+struct node {
     int data;
-    struct Node* next;
+    struct node * link;
 };
 
-struct Node* front = NULL;
-struct Node* rear = NULL;
+struct node* front = NULL;
+struct node* rear = NULL;
 
-void enqueue(int value) {
-    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    if (newNode == NULL) {
-        printf("Queue Overflow\n");
-        return;
+// Enqueue
+void enqueue(int value){
+    struct node* ptr = (struct node*)malloc(sizeof(struct node));
+
+    ptr -> data = value;
+    ptr -> link = NULL;
+
+    if(front == NULL && rear == NULL){
+        front = rear = ptr;
     }
-    newNode->data = value;
-    newNode->next = NULL;
-    if (rear == NULL) {
-        front = rear = newNode;
-    } 
-    else {
-        rear->next = newNode;
-        rear = newNode;
+    else{
+        rear->link = ptr;
+        rear = ptr;
     }
-    printf("%d enqueued to queue\n", value);
 }
 
-void dequeue() {
-    if (front == NULL) {
-        printf("Queue Underflow\n");
-    } 
-    else {
-        struct Node* temp = front;
-        printf("%d dequeued from queue\n", front->data);
-        front = front->next;
-        if (front == NULL) {
-            rear = NULL;
-        }
+//Dequeue
+int dequeue(){
+    if(front == NULL){
+        printf("underflow\n");
+        return -1;
+    }
+    else{
+        struct node* temp = front;
+        int temp_data = front ->data;
+        front = front->link;
         free(temp);
+
+        return temp_data;
     }
 }
 
-void peek() {
-    if (front == NULL) {
-        printf("Queue is empty\n");
-    } 
-    else {
-        printf("Front element is %d\n", front->data);
+void display(struct node* head){
+    while(head!=NULL){
+        printf("%d ", head->data);
+        head = head->link;
     }
-}
-
-void display() {
-    if (front == NULL) {
-        printf("Queue is empty\n");
-    } 
-    else {
-        struct Node* temp = front;
-        printf("Queue elements are: ");
-        while (temp != NULL) {
-            printf("%d ", temp->data);
-            temp = temp->next;
-        }
-        printf("\n");
-    }
+    printf("\n");
 }
 
 int main() {
-    enqueue(10);
-    enqueue(20);
-    enqueue(30);
-    display();
-    dequeue();
-    peek();
-    display();
+    
     return 0;
 }
